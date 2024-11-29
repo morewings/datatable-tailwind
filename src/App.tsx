@@ -1,5 +1,18 @@
+import { DataTable } from './DataTable/DataTable.tsx';
+import { generateData } from './mocks/generateData.ts';
+
+const SEED = 66;
+
+const ROWS_AMOUNT = 100;
+
+const tableData = generateData(ROWS_AMOUNT, SEED);
+
 const App = () => {
-  return <div className="flex flex-col gap-3 text-amber-600">Hello, world!</div>;
+  return (
+    <div>
+      <DataTable tableData={tableData} />
+    </div>
+  );
 };
 
 export default App;
