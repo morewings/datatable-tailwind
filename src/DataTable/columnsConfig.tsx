@@ -14,7 +14,11 @@ export const columns = [
     size: 120,
     header: (props) => {
       return (
-        <HeaderCell title="First name" columnWidth={props.column.getSize()} />
+        <HeaderCell
+          context={props}
+          title="First name"
+          columnWidth={props.column.getSize()}
+        />
       );
     },
     cell: (props) => (
@@ -26,7 +30,11 @@ export const columns = [
     // size: 150,
     header: (props) => {
       return (
-        <HeaderCell title="Last name" columnWidth={props.column.getSize()} />
+        <HeaderCell
+          context={props}
+          title="Last name"
+          columnWidth={props.column.getSize()}
+        />
       );
     },
     cell: (props) => (
@@ -37,10 +45,11 @@ export const columns = [
     // We have to provide custom id here, otherwise it is inherited from accessor key value.
     // Which is used in multiple places
     id: 'randomInteger',
-    size: 120,
+    size: 144,
     header: (props) => {
       return (
         <HeaderCell
+          context={props}
           title="Random integer"
           columnWidth={props.column.getSize()}
         />
@@ -55,10 +64,11 @@ export const columns = [
   }),
   columnHelper.accessor('randomDecimal', {
     id: 'randomDecimal',
-    size: 180,
+    size: 200,
     header: (props) => {
       return (
         <HeaderCell
+          context={props}
           title="Random decimal (3 digits)"
           columnWidth={props.column.getSize()}
         />
@@ -78,6 +88,7 @@ export const columns = [
     header: (props) => {
       return (
         <HeaderCell
+          context={props}
           title="Random currency (EUR)"
           columnWidth={props.column.getSize()}
         />
@@ -94,7 +105,11 @@ export const columns = [
     size: 180,
     header: (props) => {
       return (
-        <HeaderCell title="Random date" columnWidth={props.column.getSize()} />
+        <HeaderCell
+          context={props}
+          title="Random date"
+          columnWidth={props.column.getSize()}
+        />
       );
     },
     cell: (props) => (
@@ -104,7 +119,13 @@ export const columns = [
   columnHelper.accessor('email', {
     size: 180,
     header: (props) => {
-      return <HeaderCell title="Email" columnWidth={props.column.getSize()} />;
+      return (
+        <HeaderCell
+          context={props}
+          title="Email"
+          columnWidth={props.column.getSize()}
+        />
+      );
     },
     cell: (props) => (
       <TextCell columnWidth={props.column.getSize()} value={props.getValue()} />
@@ -114,7 +135,11 @@ export const columns = [
     size: 120,
     header: (props) => {
       return (
-        <HeaderCell title="Country" columnWidth={props.column.getSize()} />
+        <HeaderCell
+          context={props}
+          title="Country"
+          columnWidth={props.column.getSize()}
+        />
       );
     },
     cell: (props) => (
@@ -126,16 +151,26 @@ export const columns = [
   }),
   columnHelper.accessor('address.city', {
     header: (props) => {
-      return <HeaderCell title="City" columnWidth={props.column.getSize()} />;
+      return (
+        <HeaderCell
+          context={props}
+          title="City"
+          columnWidth={props.column.getSize()}
+        />
+      );
     },
     cell: (props) => (
       <TextCell columnWidth={props.column.getSize()} value={props.getValue()} />
     ),
   }),
   columnHelper.accessor('address.streetAddress', {
-    header: props => {
+    header: (props) => {
       return (
-        <HeaderCell title="Address" columnWidth={props.column.getSize()} />
+        <HeaderCell
+          context={props}
+          title="Address"
+          columnWidth={props.column.getSize()}
+        />
       );
     },
     cell: (props) => (
@@ -144,9 +179,13 @@ export const columns = [
   }),
   columnHelper.accessor('business.companyName', {
     size: 220,
-    header: props => {
+    header: (props) => {
       return (
-        <HeaderCell title="Company" columnWidth={props.column.getSize()} />
+        <HeaderCell
+          context={props}
+          title="Company"
+          columnWidth={props.column.getSize()}
+        />
       );
     },
     cell: (props) => (
@@ -155,9 +194,13 @@ export const columns = [
   }),
   columnHelper.accessor('business.iban', {
     size: 260,
-    header: props => {
+    header: (props) => {
       return (
-        <HeaderCell title="IBAN" columnWidth={props.column.getSize()} />
+        <HeaderCell
+          context={props}
+          title="IBAN"
+          columnWidth={props.column.getSize()}
+        />
       );
     },
     cell: (props) => (
