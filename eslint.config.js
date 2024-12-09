@@ -3,7 +3,7 @@ import eslintTS from 'typescript-eslint';
 import tailwindPlugin from 'eslint-plugin-tailwindcss';
 import configReactRecommended from 'eslint-plugin-react/configs/recommended.js';
 import configReactJSXRuntime from 'eslint-plugin-react/configs/jsx-runtime.js';
-import {fixupPluginRules} from '@eslint/compat';
+import { fixupPluginRules } from '@eslint/compat';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
 import pluginReactRefresh from 'eslint-plugin-react-refresh';
 
