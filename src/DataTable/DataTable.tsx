@@ -8,6 +8,7 @@ import {
 import { columns } from './columnsConfig.tsx';
 import { Row } from './types.ts';
 import { useVirtualRows } from './features/useVirtualRows.ts';
+import { createPinnedCellStyle } from './features/createPinnedCellStyle.ts';
 
 type Props = {
   /**
@@ -38,19 +39,31 @@ export const DataTable: FC<Props> = ({ tableData }) => {
       ref={scrollRef}
     >
       <table className="border-separate border-spacing-0 text-xs">
-        <thead className="sticky left-0 top-0 z-20">
+        <thead className="sticky left-0 top-0 z-30">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
+              {headerGroup.headers.map((header, index, headerCells) => {
+                const cellStyle = createPinnedCellStyle({
+                  index,
+                  rowLength: headerCells.length,
+                  context: header,
+                });
                 return (
                   <th
                     key={header.id}
                     className={classNames(
                       // basic styles
-                      'whitespace-nowrap bg-stone-600 text-left font-normal text-gray-100',
+                      'whitespace-nowrap text-left font-normal text-stone-100 p-0',
                       // border styles
                       'border-t border-solid border-t-stone-600 border-b border-b-stone-600 border-r border-r-stone-300 first:border-l first:border-l-stone-300',
+                      // sticky column styles
+                      {
+                        'sticky z-20 bg-cyan-800 border-t-cyan-800 border-b-cyan-800':
+                          Boolean(header.column.getIsPinned()),
+                        'bg-stone-600': !header.column.getIsPinned(),
+                      },
                     )}
+                    style={cellStyle}
                   >
                     {header.isPlaceholder
                       ? null
@@ -69,7 +82,7 @@ export const DataTable: FC<Props> = ({ tableData }) => {
             {/* Fix the issue with a sticky table header and infinite scroll */}
             {before > 0 && (
               <tr>
-                <td colSpan={columns.length} style={{height: before}} />
+                <td colSpan={columns.length} style={{ height: before }} />
               </tr>
             )}
             {virtualRows.map((virtualRow) => {
@@ -77,28 +90,40 @@ export const DataTable: FC<Props> = ({ tableData }) => {
               const row = rows[virtualRow.index];
               return (
                 <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td
-                      key={cell.id}
-                      className={classNames(
-                        // basic styles
-                        'whitespace-nowrap font-normal text-gray-700',
-                        // border styles
-                        'border-b border-solid border-b-stone-300 border-r border-r-stone-300 first:border-l first:border-l-stone-300',
-                      )}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </td>
-                  ))}
+                  {row.getVisibleCells().map((cell, index, rowCells) => {
+                    const cellStyle = createPinnedCellStyle({
+                      index,
+                      rowLength: rowCells.length,
+                      context: cell,
+                    });
+                    return (
+                      <td
+                        key={cell.id}
+                        className={classNames(
+                          // basic styles
+                          'whitespace-nowrap font-normal text-stone-950 bg-white p-0',
+                          // border styles
+                          'border-b border-solid border-b-stone-300 border-r border-r-stone-300 first:border-l first:border-l-stone-300',
+                          // sticky column styles
+                          {
+                            'sticky z-20': Boolean(cell.column.getIsPinned()),
+                          },
+                        )}
+                        style={cellStyle}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </td>
+                    );
+                  })}
                 </tr>
               );
             })}
             {after > 0 && (
               <tr>
-                <td colSpan={columns.length} style={{height: after}} />
+                <td colSpan={columns.length} style={{ height: after }} />
               </tr>
             )}
           </Fragment>
