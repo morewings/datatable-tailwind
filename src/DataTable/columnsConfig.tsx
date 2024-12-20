@@ -57,6 +57,7 @@ export const columns = [
     },
     cell: (props) => (
       <NumberCell
+        locale={props.table.options.meta?.locale}
         columnWidth={props.column.getSize()}
         value={props.getValue()}
       />
@@ -76,6 +77,7 @@ export const columns = [
     },
     cell: (props) => (
       <NumberCell
+        locale={props.table.options.meta?.locale}
         columnWidth={props.column.getSize()}
         value={props.getValue()}
         fractionDigits={3}
@@ -96,6 +98,7 @@ export const columns = [
     },
     cell: (props) => (
       <CurrencyCell
+        locale={props.table.options.meta?.locale}
         columnWidth={props.column.getSize()}
         value={props.getValue()}
       />
@@ -113,7 +116,11 @@ export const columns = [
       );
     },
     cell: (props) => (
-      <DateCell columnWidth={props.column.getSize()} value={props.getValue()} />
+      <DateCell
+        locale={props.table.options.meta?.locale}
+        columnWidth={props.column.getSize()}
+        value={props.getValue()}
+      />
     ),
   }),
   columnHelper.accessor('email', {
@@ -133,6 +140,7 @@ export const columns = [
   }),
   columnHelper.accessor('address.country', {
     size: 120,
+    sortingFn: 'countryCodesToNames',
     header: (props) => {
       return (
         <HeaderCell
@@ -144,6 +152,7 @@ export const columns = [
     },
     cell: (props) => (
       <CountryCell
+        locale={props.table.options.meta?.locale}
         columnWidth={props.column.getSize()}
         value={props.getValue()}
       />
