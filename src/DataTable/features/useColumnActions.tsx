@@ -21,11 +21,16 @@ export const useColumnActions = (
   // Get pinning position using TanStack table API
   const isPinned = context.column.getIsPinned();
 
-  // Memoization is required to preserve referential equality of the resulting array
+  // Get column sorting state using TanStack table API
+  const isSorted = context.column.getIsSorted();
+
+  // Memoization is required to preserve referential equality
+  // of the resulting array
   return useMemo<ColumnAction[]>(
     () => [
       {
-        // Use ternary expression to decide which label text or icon to render, according to the pinning state
+        // Use ternary expression to decide which label text or icon
+        // to render, according to the pinning state
         label: isPinned !== 'left' ? 'Pin left' : 'Unpin left',
         icon:
           isPinned !== 'left' ? (
@@ -34,7 +39,8 @@ export const useColumnActions = (
             <Icon name="push-pin-simple-slash" className="text-lg" />
           ),
         onClick: () => {
-          // Conditionally set or unset column pinning state using TanStack table API
+          // Conditionally set or unset column pinning state
+          // using TanStack table API
           if (isPinned !== 'left') {
             context.column.pin('left');
           } else {
@@ -58,7 +64,42 @@ export const useColumnActions = (
           }
         },
       },
+      {
+        // Use ternary expression to decide which label text
+        // or icon to render, according to the sorting state
+        label: isSorted !== 'asc' ? 'Sort ascending' : 'Clear ascending',
+        icon:
+          isSorted !== 'asc' ? (
+            <Icon name="sort-ascending" className="text-lg" />
+          ) : (
+            <Icon name="shuffle" className="text-lg" />
+          ),
+        onClick: () => {
+          // Conditionally set or unset column sorting state using TanStack table API
+          if (isSorted !== 'asc') {
+            context.table.setSorting([{ desc: false, id: context.column.id }]);
+          } else {
+            context.column.clearSorting();
+          }
+        },
+      },
+      {
+        label: isSorted !== 'desc' ? 'Sort descending' : 'Clear descending',
+        icon:
+          isSorted !== 'desc' ? (
+            <Icon name="sort-descending" className="text-lg" />
+          ) : (
+            <Icon name="shuffle" className="text-lg" />
+          ),
+        onClick: () => {
+          if (isSorted !== 'desc') {
+            context.table.setSorting([{ desc: true, id: context.column.id }]);
+          } else {
+            context.column.clearSorting();
+          }
+        },
+      },
     ],
-    [context, isPinned],
+    [context.column, context.table, isPinned, isSorted],
   );
 };
