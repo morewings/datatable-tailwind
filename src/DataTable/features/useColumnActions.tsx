@@ -24,6 +24,9 @@ export const useColumnActions = (
   // Get column sorting state using TanStack table API
   const isSorted = context.column.getIsSorted();
 
+  // Get column filter state using TanStack table API
+  const isFiltered = context.column.getIsFiltered();
+
   // Memoization is required to preserve referential equality
   // of the resulting array
   return useMemo<ColumnAction[]>(
@@ -99,7 +102,14 @@ export const useColumnActions = (
           }
         },
       },
+      {
+        label: !isFiltered ? 'Apply filter' : 'Edit/Remove filter',
+        icon: <Icon name="funnel" className="text-lg" />,
+        onClick: () => {
+          context.table.options.meta?.openFilterDialog(context.column.id);
+        },
+      },
     ],
-    [context.column, context.table, isPinned, isSorted],
+    [context.column, context.table, isFiltered, isPinned, isSorted],
   );
 };
