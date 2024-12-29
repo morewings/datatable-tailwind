@@ -3,7 +3,7 @@ import { generateData } from './mocks/generateData.ts';
 
 const SEED = 66;
 
-const ROWS_AMOUNT = 100;
+const ROWS_AMOUNT = 33333;
 
 const tableData = generateData(ROWS_AMOUNT, SEED);
 
