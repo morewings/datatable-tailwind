@@ -10,7 +10,7 @@ const tableData = generateData(ROWS_AMOUNT, SEED);
 const App = () => {
   return (
     <div>
-      <DataTable tableData={tableData} />
+      <DataTable locale="en-US" tableData={tableData} />
     </div>
   );
 };

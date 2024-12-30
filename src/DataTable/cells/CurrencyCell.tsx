@@ -13,19 +13,19 @@ export type Props = {
    * { header: props => <Cell columnWidth={props.column.getSize()} /> }
    */
   columnWidth: number;
+  /**
+   * Provide a string with a BCP 47 language tag or an Intl.Locale instance,
+   * or an array of such locale identifiers.
+   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locales
+   */
+  locale?: string;
 };
-
-/**
- * Provide a string with a BCP 47 language tag or an Intl.Locale instance,
- * or an array of such locale identifiers.
- * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locales
- */
-const LOCALE = 'en-US';
 
 export const CurrencyCell: FC<Props> = ({
   value,
   currency = 'EUR',
   columnWidth,
+  locale,
 }) => {
   /**
    * Intl.NumberFormat is a standard browser built-in object
@@ -33,7 +33,7 @@ export const CurrencyCell: FC<Props> = ({
    */
   const formattedValue =
     value !== undefined
-      ? new Intl.NumberFormat(LOCALE, {
+      ? new Intl.NumberFormat(locale, {
           style: 'currency',
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
