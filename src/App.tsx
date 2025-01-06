@@ -1,7 +1,18 @@
-import {DataTable} from './DataTable/DataTable.tsx';
+import { DataTable } from './DataTable/DataTable.tsx';
+import { generateData } from './mocks/generateData.ts';
+
+const SEED = 66;
+
+const ROWS_AMOUNT = 100;
+
+const tableData = generateData(ROWS_AMOUNT, SEED);
 
 const App = () => {
-  return <div><DataTable columns={18} rows={100} /></div>;
+  return (
+    <div>
+      <DataTable tableData={tableData} />
+    </div>
+  );
 };
 
 export default App;
