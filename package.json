@@ -1,5 +1,5 @@
 {
-  "name": "morewings-stackblitz-template",
+  "name": "tailwind-datatable",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
+    "@phosphor-icons/react": "^2.1.7",
+    "@phosphor-icons/web": "^2.1.1",
     "@tanstack/react-table": "^8.20.5",
     "@tanstack/react-virtual": "^3.11.0",
     "classnames": "^2.5.1",
@@ -22,7 +25,7 @@
     "@eslint/js": "^9.11.1",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.2",
+    "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.11.1",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.1",
@@ -35,7 +38,7 @@
     "tailwindcss": "^3.4.14",
     "typescript": "^5.6.2",
     "typescript-eslint": "^8.8.0",
-    "vite": "^5.4.8"
+    "vite": "^6.0.3"
   },
   "prettier": {
     "singleQuote": true
