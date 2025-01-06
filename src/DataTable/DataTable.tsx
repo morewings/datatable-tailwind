@@ -4,24 +4,45 @@ import {
   useReactTable,
   getCoreRowModel,
   flexRender,
+  getSortedRowModel,
 } from '@tanstack/react-table';
 import { columns } from './columnsConfig.tsx';
 import { Row } from './types.ts';
 import { useVirtualRows } from './features/useVirtualRows.ts';
 import { createPinnedCellStyle } from './features/createPinnedCellStyle.ts';
+import { useSortingFns } from './features/useSortingFns.ts';
 
 type Props = {
   /**
    * Provide a data to render
    */
   tableData: Row[];
+  /**
+   * Provide a string with a BCP 47 language tag or an Intl.Locale instance,
+   * or an array of such locale identifiers.
+   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locales
+   */
+  locale?: string;
 };
 
-export const DataTable: FC<Props> = ({ tableData }) => {
+export const DataTable: FC<Props> = ({ tableData, locale = 'en-US' }) => {
+  // create a custom sorting function
+  const { countryCodesToNames } = useSortingFns(locale);
+
   const table = useReactTable({
+    meta: {
+      // record locale to the table meta
+      locale,
+    },
+    sortingFns: {
+      // set the custom sorting function we created for the table
+      countryCodesToNames,
+    },
     columns,
     data: tableData,
     getCoreRowModel: getCoreRowModel(),
+    // apply Sorted Row Model from TanStack
+    getSortedRowModel: getSortedRowModel(),
   });
 
   /* Virtualizer logic start */
@@ -101,12 +122,17 @@ export const DataTable: FC<Props> = ({ tableData }) => {
                         key={cell.id}
                         className={classNames(
                           // basic styles
-                          'whitespace-nowrap font-normal text-stone-950 bg-white p-0',
+                          'whitespace-nowrap font-normal text-stone-950 p-0',
                           // border styles
                           'border-b border-solid border-b-stone-300 border-r border-r-stone-300 first:border-l first:border-l-stone-300',
                           // sticky column styles
                           {
                             'sticky z-20': Boolean(cell.column.getIsPinned()),
+                          },
+                          // add cyan highlight for the column is in a sorted state
+                          {
+                            'bg-white': !cell.column.getIsSorted(),
+                            'bg-cyan-100': Boolean(cell.column.getIsSorted()),
                           },
                         )}
                         style={cellStyle}
