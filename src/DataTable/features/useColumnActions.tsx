@@ -10,6 +10,8 @@ type ColumnAction = {
   icon: ReactNode;
   /** Callback when a user clicks an action button */
   onClick: () => void;
+  /** True when table capability is disabled by config */
+  disabled?: boolean;
 };
 
 /**
@@ -50,6 +52,7 @@ export const useColumnActions = (
             context.column.pin(false);
           }
         },
+        disabled: !context.column.getCanPin(),
       },
       {
         label: isPinned !== 'right' ? 'Pin right' : 'Unpin right',
@@ -66,10 +69,9 @@ export const useColumnActions = (
             context.column.pin(false);
           }
         },
+        disabled: !context.column.getCanPin(),
       },
       {
-        // Use ternary expression to decide which label text
-        // or icon to render, according to the sorting state
         label: isSorted !== 'asc' ? 'Sort ascending' : 'Clear ascending',
         icon:
           isSorted !== 'asc' ? (
@@ -85,6 +87,7 @@ export const useColumnActions = (
             context.column.clearSorting();
           }
         },
+        disabled: !context.column.getCanSort(),
       },
       {
         label: isSorted !== 'desc' ? 'Sort descending' : 'Clear descending',
@@ -101,6 +104,7 @@ export const useColumnActions = (
             context.column.clearSorting();
           }
         },
+        disabled: !context.column.getCanSort(),
       },
       {
         label: !isFiltered ? 'Apply filter' : 'Edit/Remove filter',
@@ -108,6 +112,7 @@ export const useColumnActions = (
         onClick: () => {
           context.table.options.meta?.openFilterDialog(context.column.id);
         },
+        disabled: !context.column.getCanFilter(),
       },
     ],
     [context.column, context.table, isFiltered, isPinned, isSorted],

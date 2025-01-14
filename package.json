@@ -42,5 +42,6 @@
   },
   "prettier": {
     "singleQuote": true
-  }
+  },
+  "packageManager": "pnpm@10.8.1"
 }

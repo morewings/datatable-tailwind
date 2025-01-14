@@ -31,7 +31,7 @@ export const TableDialog: FC<Props> = ({
       onClose={onClose}
     >
       {/* Create a backdrop */}
-      <DialogBackdrop className="fixed inset-0 bg-stone-600/30 backdrop-blur-sm" />
+      <DialogBackdrop className="fixed inset-0 bg-primary/30 backdrop-blur-sm dark:bg-primaryDark/30" />
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
         <div className="flex min-h-full items-center justify-center">
           <DialogPanel
@@ -39,9 +39,9 @@ export const TableDialog: FC<Props> = ({
             transition
             className={classNames(
               // general styles
-              'w-full max-w-xs rounded-md bg-stone-600 p-5',
+              'w-full max-w-xs rounded-md bg-primary dark:bg-primaryDark p-5',
               // shadow styles
-              'shadow-lg shadow-stone-600',
+              'shadow-lg shadow-primary dark:shadow-primaryDark',
               // transition styles
               'transition duration-300 ease-out data-[closed]:opacity-0',
             )}
