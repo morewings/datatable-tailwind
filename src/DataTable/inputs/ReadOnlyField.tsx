@@ -44,7 +44,10 @@ export const ReadOnlyField: FC<Props> = ({
           type="text"
           className={classNames(
             'block flex-shrink w-full rounded-md border-none bg-white/10 py-2 px-3 text-sm text-white/80 cursor-default outline-none',
-            'focus:bg-white/75 focus:text-stone-950',
+            // focus styles light
+            'focus:bg-backgroundLight/75 focus:text-stone-950',
+            // focus styles dark
+            'dark:focus:bg-backgroundDark/10 dark:focus:text-textDark',
             'transition-all duration-200',
             className,
           )}

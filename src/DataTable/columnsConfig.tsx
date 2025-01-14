@@ -51,6 +51,9 @@ export const columns = [
     ),
   }),
   columnHelper.accessor('randomDecimal', {
+    enableColumnFilter: false,
+    enablePinning: false,
+    enableSorting: false,
     meta: {
       contentType: ContentTypes.Number,
       title: 'Random integer',

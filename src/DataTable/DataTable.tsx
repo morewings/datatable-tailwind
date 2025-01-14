@@ -28,9 +28,14 @@ type Props = {
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#locales
    */
   locale?: string;
+  /**
+   * Enable TanStack table debug mode
+   * @see https://tanstack.com/table/latest/docs/api/core/table#debugall
+   */
+  debug?: boolean;
 };
 
-export const DataTable: FC<Props> = ({ tableData, locale = 'en-US' }) => {
+export const DataTable: FC<Props> = ({ tableData, locale = 'en-US', debug }) => {
   // create a custom sorting function
   const { countryCodesToNames } = useSortingFns(locale);
 
@@ -66,6 +71,7 @@ export const DataTable: FC<Props> = ({ tableData, locale = 'en-US' }) => {
     getSortedRowModel: getSortedRowModel(),
     // apply Filtered Row Model from TanStack
     getFilteredRowModel: getFilteredRowModel(),
+    debugAll: debug
   });
 
   /* Virtualizer logic start */
@@ -93,7 +99,7 @@ export const DataTable: FC<Props> = ({ tableData, locale = 'en-US' }) => {
         className="h-min max-h-screen max-w-full overflow-auto"
         ref={scrollRef}
       >
-        <table className="border-separate border-spacing-0 text-xs">
+        <table className="border-separate border-spacing-0 bg-backgroundLight text-xs dark:bg-backgroundDark">
           <thead className="sticky left-0 top-0 z-30">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -108,14 +114,16 @@ export const DataTable: FC<Props> = ({ tableData, locale = 'en-US' }) => {
                       key={header.id}
                       className={classNames(
                         // basic styles
-                        'whitespace-nowrap text-left font-normal text-stone-100 p-0',
-                        // border styles
-                        'border-t border-solid border-t-stone-600 border-b border-b-stone-600 border-r border-r-stone-300 first:border-l first:border-l-stone-300',
+                        'whitespace-nowrap text-left font-normal text-textDark p-0',
+                        // Top and bottom border styles
+                        'border-t border-solid border-t-primary dark:border-t-primaryDark border-b border-b-primary dark:border-b-primaryDark ',
+                        // Left and right border styles
+                        'border-r border-r-borderColor dark:border-r-borderColorDark first:border-l first:border-l-borderColor dark:first:border-l-borderColorDark',
                         // sticky column styles
                         {
-                          'sticky z-20 bg-cyan-800 border-t-cyan-800 border-b-cyan-800':
+                          'sticky z-20 bg-secondary border-t-secondary border-b-secondary':
                             Boolean(header.column.getIsPinned()),
-                          'bg-stone-600': !header.column.getIsPinned(),
+                          'bg-primary dark:bg-primaryDark': !header.column.getIsPinned(),
                         },
                       )}
                       style={cellStyle}
@@ -156,19 +164,24 @@ export const DataTable: FC<Props> = ({ tableData, locale = 'en-US' }) => {
                         key={cell.id}
                         className={classNames(
                           // basic styles
-                          'whitespace-nowrap text-stone-950 p-0 group-hover:!bg-cyan-100',
+                          'whitespace-nowrap p-0',
+                          // bg and text color
+                          'text-textLight dark:text-textDark bg-backgroundLight dark:bg-backgroundDark',
                           // transition styles
                           'transition-all duration-200',
-                          // border styles
-                          'border-b border-solid border-b-stone-300 border-r border-r-stone-300 first:border-l first:border-l-stone-300',
+                          // row highlight
+                          'group-hover:!bg-hoverColor dark:group-hover:!bg-hoverColorDark',
+                          // border styles light
+                          'border-b border-solid border-b-borderColor   border-r border-r-borderColor  first:border-l first:border-l-borderColor',
+                          // border styles dark
+                          'dark:border-b-borderColorDark dark:border-r-borderColorDark dark:first:border-l-borderColorDark',
                           // sticky column styles
                           {
                             'sticky z-20': Boolean(cell.column.getIsPinned()),
                           },
                           // add cyan highlight for the column is in a sorted state
                           {
-                            'bg-white': !cell.column.getIsSorted(),
-                            'bg-cyan-100': Boolean(cell.column.getIsSorted()),
+                            'bg-hoverColor dark:bg-hoverColorDark': Boolean(cell.column.getIsSorted()),
                           },
                           // change filtered cells font style
                           {
