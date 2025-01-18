@@ -113,20 +113,19 @@ export const ComboField: FC<Props> = ({
           )}
           <ComboboxInput
             className={classNames(
-              'w-full outline-none rounded-md border-none bg-white/10 py-2 px-3 text-sm text-white/80 placeholder-white/70',
-              'focus:bg-white/85 focus:text-stone-950 focus:placeholder-transparent',
+              'w-full outline-none rounded-md border-none bg-white/10 py-2 px-3 text-sm text-white/80 placeholder-white/70 peer',
+              'focus:bg-backgroundLight/85 focus:text-stone-950 focus:placeholder-transparent',
+              // focus styles dark
+              'dark:focus:bg-backgroundDark/85 dark:focus:text-textDark',
             )}
             placeholder={placeholder}
             displayValue={getDisplayValue}
             onChange={handleInputChange}
           />
-          <ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
+          <ComboboxButton className="absolute inset-y-0 right-0 px-2.5 text-stone-800 peer-focus:text-borderColor">
             <Icon
               name="caret-up-down"
-              className={classNames(
-                'size-4 text-stone-800',
-                'hover:text-stone-400',
-              )}
+              className="size-4"
             />
           </ComboboxButton>
         </div>
