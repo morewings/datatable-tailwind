@@ -1,5 +1,5 @@
 import { FC, Fragment } from 'react';
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
+import { Menu, MenuButton, MenuItem, MenuItems, Button } from '@headlessui/react';
 import { HeaderContext } from '@tanstack/react-table';
 import classNames from 'classnames';
 import {Icon} from './../../Icon.tsx'
@@ -30,19 +30,20 @@ export const HeaderCell: FC<Props> = ({ title, columnWidth, context }) => {
   const items = useColumnActions(context);
 
   return (
-    <div className="flex p-1.5" style={{ width: columnWidth }}>
+    <div className="flex items-center p-1.5" style={{ width: columnWidth }}>
       <div className="mr-1.5 font-semibold">{title}</div>
       <Menu>
         <MenuButton as={Fragment}>
           {({ hover, open }) => (
-            <button
-              className={classNames('ml-auto cursor-pointer', {
+            <Button
+              aria-label="Show column actions"
+              className={classNames('ml-auto cursor-pointer flex items-center', {
                 'text-gray-100': hover || open,
                 'text-gray-400': !hover && !open,
               })}
             >
               <Icon name="list" className="text-lg" />
-            </button>
+            </Button>
           )}
         </MenuButton>
         <MenuItems
@@ -50,30 +51,33 @@ export const HeaderCell: FC<Props> = ({ title, columnWidth, context }) => {
           transition
           className={classNames(
             // general styles
-            'overflow-hidden rounded text-xs text-slate-100 z-30',
+            'overflow-hidden rounded text-xs text-textDark z-30 bg-primary dark:bg-primaryDark',
             // shadow styles
-            'shadow-lg shadow-stone-600/50',
+            'shadow-lg shadow-primary/50 dark:shadow-primaryDark/50',
             // transition styles
             'origin-top transition duration-200 ease-out data-[closed]:scale-95 data-[closed]:opacity-0',
           )}
         >
-          {items.map(({ label, icon: Icon, onClick }) => (
+          {items.map(({ label, icon: Icon, onClick, disabled }) => (
             <MenuItem key={label} as={Fragment}>
               {() => (
-                <button
+                <Button
+                  disabled={disabled}
                   onClick={onClick}
                   className={classNames(
                     // general styles
                     'flex w-full items-center gap-1.5 whitespace-nowrap',
                     // background styles
-                    'bg-stone-600 p-2 hover:bg-stone-500',
+                    'p-2 hover:bg-white/10',
                     // add border between items
-                    'border-stone-500 [&:not(:last-child)]:border-b',
+                    'border-borderColor/30 [&:not(:last-child)]:border-b',
+                    // disabled styles
+                    'disabled:text-textDark/30 disabled:pointer-events-none'
                   )}
                 >
                   {Icon}
                   <div>{label}</div>
-                </button>
+                </Button>
               )}
             </MenuItem>
           ))}

@@ -54,7 +54,10 @@ export const TextField: FC<Props> = ({
           placeholder={placeholder}
           className={classNames(
             'block w-full rounded-md border-none bg-white/10 py-2 px-3 text-sm text-white/80 outline-none placeholder-white/70',
-            'focus:bg-white/85 focus:text-stone-950 focus:placeholder-transparent',
+            // focus styles light
+            'focus:bg-backgroundLight/85 focus:text-stone-950 focus:placeholder-transparent',
+            // focus styles dark
+            'dark:focus:bg-backgroundDark/85 dark:focus:text-textDark',
             'transition-all duration-200',
             className,
           )}
