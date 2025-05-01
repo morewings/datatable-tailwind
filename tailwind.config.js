@@ -19,6 +19,7 @@ export default {
         hoverColorDark: colors.cyan['600'],
         borderColor: colors.stone['300'],
         borderColorDark: colors.stone['600'],
+        disabledColor: colors.stone['300'],
       },
     },
   },

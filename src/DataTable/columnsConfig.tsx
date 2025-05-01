@@ -6,10 +6,36 @@ import { NumberCell } from './cells/NumberCell.tsx';
 import { CurrencyCell } from './cells/CurrencyCell.tsx';
 import { DateCell } from './cells/DateCell.tsx';
 import { CountryCell } from './cells/CountryCell.tsx';
+import { SelectionHeaderCell } from './cells/SelectionHeaderCell.tsx';
+import { Checkbox } from './inputs/Checkbox.tsx';
 
 const columnHelper = createColumnHelper<Row>();
 
 export const columns = [
+  columnHelper.display({
+    id: 'selection',
+    size: 34,
+    header: (props) => {
+      return (
+        <SelectionHeaderCell
+          context={props}
+          columnWidth={props.column.getSize()}
+        />
+      );
+    },
+    cell: ({ row, column }) => {
+      return (
+        <div className="px-2" style={{ width: column.getSize() }}>
+          <Checkbox
+            className=" text-primary dark:text-textDark/60"
+            checked={row.getIsSelected()}
+            disabled={!row.getCanSelect()}
+            onChange={row.getToggleSelectedHandler()}
+          />
+        </div>
+      );
+    },
+  }),
   columnHelper.accessor('firstName', {
     meta: {
       contentType: ContentTypes.Text,

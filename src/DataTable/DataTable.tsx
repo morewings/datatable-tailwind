@@ -6,6 +6,7 @@ import {
   flexRender,
   getSortedRowModel,
   getFilteredRowModel,
+  RowSelectionState,
 } from '@tanstack/react-table';
 import { columns } from './columnsConfig.tsx';
 import { Row } from './types.ts';
@@ -16,6 +17,8 @@ import { FilterDialog } from './dialogs/FilterDialog.tsx';
 import { useFilterDialogState } from './features/useFilterDialogState.ts';
 import { isBiggerNumber, isAfterDate } from './features/filterFns.ts';
 import { Button } from './inputs/Button.tsx';
+import { SelectionInfo } from './SelectionInfo.tsx';
+import { useRowSelection } from './features/useRowSelection.ts';
 
 type Props = {
   /**
@@ -33,9 +36,19 @@ type Props = {
    * @see https://tanstack.com/table/latest/docs/api/core/table#debugall
    */
   debug?: boolean;
+  rowSelection?: RowSelectionState;
+  onRowSelect?: (rowSelectionState: RowSelectionState) => void;
 };
 
-export const DataTable: FC<Props> = ({ tableData, locale = 'en-US', debug }) => {
+const emptySelection = {};
+
+export const DataTable: FC<Props> = ({
+  tableData,
+  locale = 'en-US',
+  debug,
+  onRowSelect = () => {},
+  rowSelection: rowSelectionProp = emptySelection,
+}) => {
   // create a custom sorting function
   const { countryCodesToNames } = useSortingFns(locale);
 
@@ -47,12 +60,22 @@ export const DataTable: FC<Props> = ({ tableData, locale = 'en-US', debug }) => 
     selectedId,
   } = useFilterDialogState();
 
+  /* Row selection logic*/
+  const { rowSelection, handleRowSelection } = useRowSelection({
+    rowSelectionProp,
+    onRowSelect,
+  });
+  /* Row selection logic end*/
+
   const table = useReactTable({
     meta: {
       // record locale to the table meta
       locale,
       // callback used inside the column header menu
       openFilterDialog,
+    },
+    initialState: {
+      columnPinning: { left: ['selection'] },
     },
     sortingFns: {
       // set the custom sorting function we created for the table
@@ -71,7 +94,12 @@ export const DataTable: FC<Props> = ({ tableData, locale = 'en-US', debug }) => 
     getSortedRowModel: getSortedRowModel(),
     // apply Filtered Row Model from TanStack
     getFilteredRowModel: getFilteredRowModel(),
-    debugAll: debug
+    debugAll: debug,
+    enableRowSelection: (row) => row.original.randomDecimal > 0,
+    onRowSelectionChange: handleRowSelection,
+    state: {
+      rowSelection,
+    },
   });
 
   /* Virtualizer logic start */
@@ -95,8 +123,18 @@ export const DataTable: FC<Props> = ({ tableData, locale = 'en-US', debug }) => 
         onClose={closeDialog}
         tableContext={table}
       />
+      <div className="flex h-[52px] items-center gap-1.5 p-1.5">
+        <SelectionInfo
+          locale={locale}
+          selected={table.getSelectedRowModel().rows.length}
+          total={table.getPreFilteredRowModel().rows.length}
+        />
+      </div>
       <div
-        className="h-min max-h-screen max-w-full overflow-auto"
+        style={{
+          maxHeight: 'calc(100dvh - 52px)',
+        }}
+        className="h-min max-w-full overflow-auto"
         ref={scrollRef}
       >
         <table className="border-separate border-spacing-0 bg-backgroundLight text-xs dark:bg-backgroundDark">
@@ -123,7 +161,8 @@ export const DataTable: FC<Props> = ({ tableData, locale = 'en-US', debug }) => 
                         {
                           'sticky z-20 bg-secondary border-t-secondary border-b-secondary':
                             Boolean(header.column.getIsPinned()),
-                          'bg-primary dark:bg-primaryDark': !header.column.getIsPinned(),
+                          'bg-primary dark:bg-primaryDark':
+                            !header.column.getIsPinned(),
                         },
                       )}
                       style={cellStyle}
@@ -181,7 +220,9 @@ export const DataTable: FC<Props> = ({ tableData, locale = 'en-US', debug }) => 
                           },
                           // add cyan highlight for the column is in a sorted state
                           {
-                            'bg-hoverColor dark:bg-hoverColorDark': Boolean(cell.column.getIsSorted()),
+                            'bg-hoverColor dark:bg-hoverColorDark': Boolean(
+                              cell.column.getIsSorted(),
+                            ),
                           },
                           // change filtered cells font style
                           {

@@ -14,7 +14,7 @@ export type Props = {
   /**
    * Set the width of a column in pixels
    * @example
-   * { header: props => <Cell columnWidth={props.column.getSize()} /> }
+   * { header: props => <HeaderCell columnWidth={props.column.getSize()} /> }
    */
   columnWidth: number;
   /**
