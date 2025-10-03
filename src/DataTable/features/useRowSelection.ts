@@ -9,9 +9,11 @@ export type Props = {
 export const useRowSelection = ({ rowSelectionProp, onRowSelect }: Props) => {
   const [rowSelection, setRowSelection] =
     useState<RowSelectionState>(rowSelectionProp);
+
   useEffect(() => {
     setRowSelection(rowSelectionProp);
   }, [rowSelectionProp]);
+
   const handleRowSelection = useCallback(
     (nextSelectionState: Updater<RowSelectionState>) => {
       setRowSelection(nextSelectionState);
@@ -23,5 +25,11 @@ export const useRowSelection = ({ rowSelectionProp, onRowSelect }: Props) => {
     },
     [onRowSelect, rowSelection],
   );
-  return { rowSelection, handleRowSelection };
+
+  const handleClearSelection = useCallback(() => {
+    setRowSelection({})
+    onRowSelect({});
+  }, [onRowSelect])
+
+  return { rowSelection, handleRowSelection, handleClearSelection };
 };

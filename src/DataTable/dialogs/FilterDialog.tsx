@@ -107,7 +107,7 @@ export const FilterDialog: FC<Props> = ({
   }, [nextFilterValue, selectedColumn, tableContext.options.meta?.locale]);
 
   return (
-    <TableDialog title={`Filter column`} open={isOpen} onClose={onClose}>
+    <TableDialog title="Filter column" open={isOpen} onClose={onClose}>
       <div className="flex flex-col gap-5">
         <ReadOnlyField label="Selected column:" value={selectedColumn?.title} />
         {filterInput}
