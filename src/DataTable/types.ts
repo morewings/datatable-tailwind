@@ -22,3 +22,8 @@ export enum ContentTypes {
   Date = 'Date',
   Country = 'Country',
 }
+
+/**
+ * Record which represents table change requested by the user. Key is equal to the row index
+ */
+export type EditState = Record<number, Row | false>;

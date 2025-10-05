@@ -9,16 +9,19 @@ import {
   RowSelectionState,
 } from '@tanstack/react-table';
 import { columns } from './columnsConfig.tsx';
-import { Row } from './types.ts';
+import { EditState, Row } from './types.ts';
 import { useVirtualRows } from './features/useVirtualRows.ts';
 import { createPinnedCellStyle } from './features/createPinnedCellStyle.ts';
 import { useSortingFns } from './features/useSortingFns.ts';
 import { FilterDialog } from './dialogs/FilterDialog.tsx';
-import { useFilterDialogState } from './features/useFilterDialogState.ts';
+import { useFilterDialogState } from './dialogs/useFilterDialogState.ts';
 import { isBiggerNumber, isAfterDate } from './features/filterFns.ts';
 import { Button } from './inputs/Button.tsx';
 import { SelectionInfo } from './SelectionInfo.tsx';
 import { useRowSelection } from './features/useRowSelection.ts';
+import { DeleteDialog } from './dialogs/DeleteDialog.tsx';
+import { useDeleteDialogState } from './dialogs/useDeleteDialogState.ts';
+import { useTableData } from './features/useTableData.ts';
 
 type Props = {
   /**
@@ -36,17 +39,31 @@ type Props = {
    * @see https://tanstack.com/table/latest/docs/api/core/table#debugall
    */
   debug?: boolean;
+  /**
+   * Provide a Row selection state
+   * @see RowSelectionState
+   */
   rowSelection?: RowSelectionState;
+  /**
+   * Callback to capture row selection changes
+   * @see RowSelectionState
+   */
   onRowSelect?: (rowSelectionState: RowSelectionState) => void;
+  /**
+   * Callback to capture table data changes
+   * @see RowSelectionState
+   */
+  onTableEdit?: (editState: EditState) => void;
 };
 
 const emptySelection = {};
 
 export const DataTable: FC<Props> = ({
-  tableData,
+  tableData: tableDataProp,
   locale = 'en-US',
   debug,
   onRowSelect = () => {},
+  onTableEdit = () => {},
   rowSelection: rowSelectionProp = emptySelection,
 }) => {
   // create a custom sorting function
@@ -55,17 +72,25 @@ export const DataTable: FC<Props> = ({
   // Initialize filter dialog state
   const {
     openDialog: openFilterDialog,
-    isOpen,
-    closeDialog,
+    isOpen: isOpenFilterDialog,
+    closeDialog: closeFilterDialog,
     selectedId,
   } = useFilterDialogState();
 
   /* Row selection logic*/
-  const { rowSelection, handleRowSelection } = useRowSelection({
-    rowSelectionProp,
-    onRowSelect,
-  });
+  const { rowSelection, handleRowSelection, handleClearSelection } =
+    useRowSelection({
+      rowSelectionProp,
+      onRowSelect,
+    });
   /* Row selection logic end*/
+
+  const { tableData, deleteRows } = useTableData({
+    tableDataProp,
+    rowSelection,
+    clearSelection: handleClearSelection,
+    onEdit: onTableEdit,
+  });
 
   const table = useReactTable({
     meta: {
@@ -95,7 +120,7 @@ export const DataTable: FC<Props> = ({
     // apply Filtered Row Model from TanStack
     getFilteredRowModel: getFilteredRowModel(),
     debugAll: debug,
-    enableRowSelection: (row) => row.original.randomDecimal > 0,
+    enableRowSelection: true,
     onRowSelectionChange: handleRowSelection,
     state: {
       rowSelection,
@@ -115,26 +140,47 @@ export const DataTable: FC<Props> = ({
     table.resetColumnFilters();
   }, [table]);
 
+  const selectedRows = table.getSelectedRowModel().rows;
+
+  const {
+    isOpen: isDeleteDialogOpen,
+    openDialog: openDeleteDialog,
+    closeDialog: closeDeleteDialog,
+  } = useDeleteDialogState();
+
   return (
     <Fragment>
       <FilterDialog
         selectedColumn={selectedId}
-        isOpen={isOpen}
-        onClose={closeDialog}
+        isOpen={isOpenFilterDialog}
+        onClose={closeFilterDialog}
         tableContext={table}
       />
-      <div className="flex h-[52px] items-center gap-1.5 p-1.5">
+      <DeleteDialog
+        onDelete={deleteRows}
+        onClose={closeDeleteDialog}
+        locale={locale}
+        rowsAmount={selectedRows.length}
+        isOpen={isDeleteDialogOpen}
+      />
+      <div className="flex h-[60px] items-center gap-3 pl-1.5">
+        <Button
+          onClick={openDeleteDialog}
+          icon="trash"
+          title="Delete row(s)"
+          disabled={selectedRows.length === 0}
+        />
         <SelectionInfo
           locale={locale}
-          selected={table.getSelectedRowModel().rows.length}
+          selected={selectedRows.length}
           total={table.getPreFilteredRowModel().rows.length}
         />
       </div>
       <div
         style={{
-          maxHeight: 'calc(100dvh - 52px)',
+          maxHeight: 'calc(100dvh - 60px)',
         }}
-        className="h-min max-w-full overflow-auto"
+        className="h-min max-w-fit overflow-auto"
         ref={scrollRef}
       >
         <table className="border-separate border-spacing-0 bg-backgroundLight text-xs dark:bg-backgroundDark">

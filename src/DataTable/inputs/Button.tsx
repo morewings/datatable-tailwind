@@ -23,7 +23,7 @@ export const Button: FC<Props> = ({
       disabled={disabled}
       onClick={onClick}
       className={classNames(
-        'truncate relative inline-flex items-center justify-center gap-2 rounded-full bg-stone-900 py-2.5 px-3 text-sm text-white/80 font-semibold tracking-wide',
+        'truncate relative inline-flex items-center justify-center gap-2 rounded-full bg-stone-900 py-2.5 px-5 text-sm text-white/80 font-semibold tracking-wide',
         'active:left-0.5 active:top-0.5',
         'hover:text-stone-900 hover:bg-stone-300',
         'disabled:bg-stone-500 disabled:cursor-not-allowed disabled:text-white/60 disabled:static',

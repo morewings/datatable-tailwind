@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { formatRowsAmount } from './features/formatRowsAmount.ts';
 
 export type Props = {
   /**
@@ -16,11 +17,6 @@ export type Props = {
    */
   locale: string;
 };
-
-const formatRowsAmount = (amount: number, locale: string) =>
-  new Intl.NumberFormat(locale, {
-    style: 'decimal',
-  }).format(amount);
 
 export const SelectionInfo: FC<Props> = ({ total, selected, locale }) => {
   return (
